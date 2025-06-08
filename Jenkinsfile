@@ -1,35 +1,26 @@
 pipeline {
   agent any
  
-  environment {
-    IMAGE_NAME = "front-venta-repuestos"
-    IMAGE_TAG  = "${env.BUILD_NUMBER}"
-  }
- 
   stages {
     stage('Clonar código') {
-      steps { checkout scm }
-    }
-    stage('Construir imagen Docker') {
       steps {
-        script { docker.build("${IMAGE_NAME}:${IMAGE_TAG}") }
+        checkout scm
       }
     }
-    stage('Lint') {
-      steps { sh 'npm run lint' }
+ 
+    stage('Construir imagen Docker') {
+      steps {
+        sh 'docker build -t front-venta-repuestos:${BUILD_NUMBER} .'
+      }
     }
   }
  
   post {
     success {
-      mail to: 'equipo-dev@ejemplo.com',
-           subject: "BUILD SUCCESS [#${env.BUILD_NUMBER}]",
-           body: "Versión ${IMAGE_TAG} construida y etiquetada correctamente."
+      echo "✅ Build #${env.BUILD_NUMBER} completada correctamente"
     }
     failure {
-      mail to: 'equipo-dev@ejemplo.com',
-           subject: "BUILD FAILED [#${env.BUILD_NUMBER}]",
-           body: "Ha fallado el pipeline. Revisa los logs en Jenkins."
+      echo "❌ Build #${env.BUILD_NUMBER} ha fallado"
     }
   }
 }
