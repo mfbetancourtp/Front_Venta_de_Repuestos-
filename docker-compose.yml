@@ -1,0 +1,47 @@
+version: '3.8'
+ 
+services:
+
+  web:
+
+    build: .                      # construye usando el Dockerfile en la raíz
+
+    image: front-venta-repuestos
+
+    container_name: front-venta-repuestos
+
+    ports:
+
+      - "80:80"
+
+    restart: unless-stopped
+ 
+  jenkins:
+
+    image: jenkins/jenkins:lts    # imagen oficial de Jenkins
+
+    user: root
+
+    container_name: ci_jenkins
+
+    privileged: true
+
+    ports:
+
+      - "8080:8080"
+
+      - "50000:50000"
+
+    volumes:
+
+      - jenkins_home:/var/jenkins_home
+
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    environment:
+
+      DOCKER_HOST: "unix:///var/run/docker.sock"
+ 
+volumes:
+
+  jenkins_home:
