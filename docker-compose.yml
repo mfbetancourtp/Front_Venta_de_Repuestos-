@@ -10,9 +10,11 @@ services:
     restart: unless-stopped
  
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: ./jenkins        # <— aquí está tu Dockerfile de Jenkins
+    image: ci_jenkins
     container_name: ci_jenkins
-    user: root
+    user: root                  # para evitar permisos con el socket
     privileged: true
     ports:
       - "8081:8081"
