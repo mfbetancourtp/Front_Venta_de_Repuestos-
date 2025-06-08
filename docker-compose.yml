@@ -1,27 +1,24 @@
 version: '3.8'
- 
 services:
   web:
     build: .
     image: front-venta-repuestos
     container_name: front-venta-repuestos
-    ports:
-      - "80:80"
+    ports: ["80:80"]
     restart: unless-stopped
  
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: ./jenkins
+    image: ci_jenkins
     container_name: ci_jenkins
-    user: root               # que el proceso corre como root
-    privileged: true         # le da permisos elevados para montar el docker.sock
-    ports:
-      - "8080:8080"
-      - "50000:50000"
+    privileged: true
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      DOCKER_HOST: unix:///var/run/docker.sock
+    ports:
+      - "8080:8080"
+      - "50000:50000"
  
 volumes:
   jenkins_home:
