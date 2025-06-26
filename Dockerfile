@@ -4,7 +4,7 @@ WORKDIR /app
  
 # Copiamos y instalamos dependencias
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
  
 # Copiamos el resto del código y lanzamos el build de Angular
 COPY . .
