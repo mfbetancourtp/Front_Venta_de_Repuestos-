@@ -26,8 +26,7 @@ pipeline {
 
         stage('Ejecutar pruebas y cobertura') {
             steps {
-                sh 'docker-compose run --rm web coverage run -m unittest tests/test_app.py'
-                sh 'docker-compose run --rm web coverage xml -o coverage/coverage.xml'
+                sh 'docker-compose run --rm web npm run test:coverage'
             }
         }
 
@@ -37,7 +36,7 @@ pipeline {
                     sh '''
                         curl -Os https://uploader.codecov.io/latest/linux/codecov
                         chmod +x codecov
-                        ./codecov -t ${CODECOV_TOKEN} -f coverage/coverage.xml
+                        ./codecov -t ${CODECOV_TOKEN} -f coverage/lcov.info
                     '''
                 }
             }
@@ -49,6 +48,7 @@ pipeline {
             }
             steps {
                 echo 'Desplegando aplicación...'
+                // Aquí puedes poner tu comando de despliegue si aplica
             }
         }
     }
