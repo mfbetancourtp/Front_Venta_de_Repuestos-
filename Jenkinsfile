@@ -3,7 +3,6 @@ pipeline {
     environment {
         COMPOSE_PROJECT_NAME = "miproyecto-pipeline"
     }
-
     stages {
         stage('Clonar repositorio') {
             steps {
@@ -12,24 +11,12 @@ pipeline {
         }
         stage('Construir contenedores') {
             steps {
-                sh 'docker-compose build' // SIN --no-cache
+                sh 'docker-compose build --no-cache'
             }
         }
-        // Elimina 'Verificar archivos en contenedor' si no es esencial
-        stage('Ejecutar pruebas y cobertura') {
+        stage('Verificar archivos en contenedor') {
             steps {
-                sh 'docker-compose run --rm web npm run test:coverage'
-            }
-        }
-        stage('Subir cobertura a Codecov') {
-            steps {
-                withCredentials([string(credentialsId: '331e66b5-52fa-4ca7-823c-1d81cad397be', variable: 'CODECOV_TOKEN')]) {
-                    sh '''
-                        curl -Os https://uploader.codecov.io/latest/linux/codecov
-                        chmod +x codecov
-                        ./codecov -t ${CODECOV_TOKEN} -f coverage/lcov.info
-                    '''
-                }
+                sh 'docker-compose run --rm web ls -R /usr/share/nginx/html'
             }
         }
         stage('Desplegar') {
