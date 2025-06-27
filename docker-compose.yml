@@ -6,7 +6,7 @@ services:
     image: front-venta-repuestos
     container_name: front-venta-repuestos
     ports:
-      - "80:80"
+      - "8080:80"    
     restart: unless-stopped
  
   jenkins:
@@ -17,7 +17,7 @@ services:
     user: root                  # para evitar permisos con el socket
     privileged: true
     ports:
-      - "8081:8081"
+      - "8081:8080" 
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
